@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+@import 'admin-lte/dist/css/adminlte.min.css';
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* Memperbesar ukuran logo di sidebar AdminLTE */
+.brand-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 0.6rem 0.5rem 0.6rem 0.4rem !important; /* Mengurangi padding kiri dari 0.75rem ke 0.4rem */
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Memperbesar Logo Anjing */
+.brand-link .brand-image {
+    max-height: 65px !important; /* Ukuran logo lebih besar */
+    height: 65px !important;
+    width: auto !important;
+    margin: 0 !important; /* Menghapus seluruh margin luar logo */
+    padding: 0 !important;
+    float: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    flex-shrink: 0 !important;
+}
+
+/* Posisi Teks SingkarakIMS */
+.brand-link .brand-text {
+    margin-left: 0.25rem !important; /* Jarak rapat antara logo dan teks */
+    font-size: 1.2rem !important;
+    white-space: nowrap !important;
+}
