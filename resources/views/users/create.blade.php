@@ -7,15 +7,15 @@
         <div>
             <div class="d-flex align-items-center">
                 <h1 class="font-weight-bold text-dark mb-0" style="font-size: 2rem; line-height: 1;">
-                    Add User
+                    Tambah User
                 </h1>
             </div>
-            <div class="text-muted small mt-1">
+            <div class="text-muted small mt-2">
                 <a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <a href="{{ route('users.index') }}" class="text-muted text-decoration-none">Users</a>
+                <a href="{{ route('users.index') }}" class="text-muted text-decoration-none">User</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <span>Create</span>
+                <span>Tambah User</span>
             </div>
         </div>
     </div>
@@ -33,17 +33,17 @@
                             <i class="fas fa-user-plus text-secondary"></i>
                         </div>
                         <div>
-                            <h5 class="m-0 font-weight-bold text-dark">User Details</h5>
-                            <small class="text-muted">Enter new user information and assign a role</small>
+                            <h5 class="m-0 font-weight-bold text-dark">Detail User</h5>
+                            <small class="text-muted">Masukkan informasi user baru dan berikan role</small>
                         </div>
                     </div>
 
                     <form action="{{ route('users.store') }}" method="POST">
                         @csrf
 
-                        {{-- Name --}}
+                        {{-- Nama --}}
                         <div class="form-group mb-3">
-                            <label for="name" class="font-weight-normal text-secondary">Full Name <span class="text-danger">*</span></label>
+                            <label for="name" class="font-weight-normal text-secondary">Nama Lengkap <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i class="fas fa-user text-muted"></i></span>
@@ -57,7 +57,7 @@
 
                         {{-- Email --}}
                         <div class="form-group mb-3">
-                            <label for="email" class="font-weight-normal text-secondary">Email Address <span class="text-danger">*</span></label>
+                            <label for="email" class="font-weight-normal text-secondary">Alamat Email <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i class="fas fa-envelope text-muted"></i></span>
@@ -69,29 +69,29 @@
                             </div>
                         </div>
 
-                        {{-- Password --}}
+                        {{-- Kata Sandi --}}
                         <div class="form-group mb-3">
-                            <label for="password" class="font-weight-normal text-secondary">Password <span class="text-danger">*</span></label>
+                            <label for="password" class="font-weight-normal text-secondary">Kata Sandi <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i class="fas fa-lock text-muted"></i></span>
                                 </div>
-                                <input type="password" name="password" class="form-control border-left-0 @error('password') is-invalid @enderror" id="password" placeholder="Minimum 8 characters" required>
+                                <input type="password" name="password" class="form-control border-left-0 @error('password') is-invalid @enderror" id="password" placeholder="Minimal 8 karakter" required>
                                 @error('password')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Select Single Role --}}
+                        {{-- Pilih Role --}}
                         <div class="form-group mb-4">
-                            <label for="role" class="font-weight-normal text-secondary">Assign Role <span class="text-danger">*</span></label>
+                            <label for="role" class="font-weight-normal text-secondary">Pilih Role <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i class="fas fa-user-shield text-muted"></i></span>
                                 </div>
                                 <select name="role" id="role" class="form-control border-left-0 @error('role') is-invalid @enderror" required>
-                                    <option value="" disabled selected>-- Select Role --</option>
+                                    <option value="" disabled selected>-- Pilih Role --</option>
                                     @foreach($roles as $role)
                                         <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
                                             {{ $role->name }}
@@ -104,13 +104,13 @@
                             </div>
                         </div>
 
-                        {{-- Action Buttons --}}
+                        {{-- Tombol Aksi --}}
                         <div class="d-flex justify-content-end mt-4 pt-3 border-top">
                             <a href="{{ route('users.index') }}" class="btn btn-light border mr-2 px-4">
-                                Cancel
+                                Batal
                             </a>
                             <button type="submit" class="btn btn-dark px-4" style="background-color: #343a40; border-color: #343a40;">
-                                <i class="fas fa-save mr-2"></i> Save
+                                <i class="fas fa-save mr-2"></i> Simpan
                             </button>
                         </div>
                     </form>

@@ -1,26 +1,26 @@
 @extends('adminlte::page')
 
-@section('title', 'Permissions')
+@section('title', 'Produk')
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
             <div class="d-flex align-items-center">
                 <h1 class="font-weight-bold text-dark mb-0" style="font-size: 2rem; line-height: 1;">
-                    Permission <span class="mx-1">-</span> {{ $permissions->total() }}
+                    Produk <span class="mx-1">-</span> {{ $products->total() }}
                 </h1>
             </div>
             <div class="text-muted small mt-2">
                 <a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <span>Permission</span>
+                <span>Produk</span>
             </div>
         </div>
         <div>
-            <a href="{{ route('permissions.create') }}"
+            <a href="{{ route('products.create') }}"
                 class="btn btn-dark btn-md px-3 font-weight-semibold shadow-sm rounded-lg"
                 style="background-color: #0f172a; border: none;">
-                <i class="fas fa-plus mr-1" style="font-size: 0.8rem;"></i> Tambah Permission
+                <i class="fas fa-plus mr-1" style="font-size: 0.8rem;"></i> Tambah Produk
             </a>
         </div>
     </div>
@@ -43,64 +43,64 @@
                     <thead style="background-color: #f8fafc; color: #475569;">
                         <tr style="border-bottom: 1px solid #e2e8f0;">
                             <th class="py-3 px-4 font-weight-bold border-0" style="width: 60px;">#</th>
-                            <th class="py-3 px-4 font-weight-bold border-0">Nama</th>
-                            <th class="py-3 px-4 font-weight-bold border-0">Digunakan Oleh</th>
+                            <th class="py-3 px-4 font-weight-bold border-0">Nama Barang</th>
+                            <th class="py-3 px-4 font-weight-bold border-0">Jumlah Stok</th>
+                            <th class="py-3 px-4 font-weight-bold border-0">Harga Satuan</th>
                             <th class="py-3 px-4 font-weight-bold border-0" style="width: 200px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody style="color: #334155;">
-                        @forelse($permissions as $index => $permission)
+                        @forelse($products as $index => $product)
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td class="py-3 px-4 text-muted align-middle" style="font-size: 0.9rem;">
-                                    {{ $permissions->firstItem() + $index }}
+                                    {{ $products->firstItem() + $index }}
                                 </td>
                                 <td class="py-3 px-4 align-middle">
                                     <div class="d-flex align-items-center">
                                         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3 text-secondary"
                                             style="width: 36px; height: 36px; background-color: #f1f5f9 !important;">
-                                            <i class="fas fa-key" style="font-size: 0.85rem;"></i>
+                                            <i class="fas fa-box" style="font-size: 0.85rem;"></i>
                                         </div>
                                         <div>
                                             <span class="font-weight-bold text-dark d-block"
-                                                style="font-size: 0.95rem;">{{ $permission->name }}</span>
+                                                style="font-size: 0.95rem;">{{ $product->name }}</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="py-3 px-4 align-middle">
-                                    @forelse($permission->roles as $role)
-                                        <span
-                                            class="badge badge-light border text-muted px-2 py-1 mr-1 mb-1 font-weight-normal"
-                                            style="font-size: 0.75rem;">
-                                            <i class="fas fa-user-shield mr-1 text-secondary"
-                                                style="font-size: 0.7rem;"></i>{{ $role->name }}
-                                        </span>
-                                    @empty
-                                        <span class="text-muted small" style="font-style: italic;">Tidak digunakan oleh role
-                                            mana pun</span>
-                                    @endforelse
+                                    <span class="badge badge-light border text-muted px-2 py-1 font-weight-normal"
+                                        style="font-size: 0.8rem;">
+                                        {{ $product->amount }} pcs
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 align-middle font-weight-semibold text-dark"
+                                    style="font-size: 0.9rem;">
+                                    {{ $product->formatted_unit_price }}
                                 </td>
                                 <td class="py-3 px-4 align-middle">
                                     <div class="d-inline-flex align-items-center">
-                                        <a href="{{ route('permissions.edit', $permission->id) }}"
+                                        <a href="{{ route('products.edit', $product->id) }}"
                                             class="btn btn-dark btn-sm px-3 mr-1 font-weight-normal shadow-sm rounded"
                                             style="background-color: #0f172a; border: none; font-size: 0.8rem;">
                                             <i class="fas fa-edit mr-1" style="font-size: 0.75rem;"></i> Edit
                                         </a>
-                                        <button type="button"
-                                            class="btn btn-outline-danger btn-sm px-2 shadow-sm rounded btn-delete"
-                                            data-action="{{ route('permissions.destroy', $permission->id) }}"
-                                            data-name="{{ $permission->name }}"
-                                            style="font-size: 0.8rem; border-color: #cbd5e1;">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
+                                        @can('delete-products')
+                                            <button type="button"
+                                                class="btn btn-outline-danger btn-sm px-2 shadow-sm rounded btn-delete"
+                                                data-action="{{ route('products.destroy', $product->id) }}"
+                                                data-name="{{ $product->name }}"
+                                                style="font-size: 0.8rem; border-color: #cbd5e1;">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center py-5 text-muted">
+                                <td colspan="5" class="text-center py-5 text-muted">
                                     <i class="fas fa-inbox fa-2x mb-2 text-secondary" style="opacity: 0.3;"></i>
-                                    <p class="mb-0 small">Belum ada permission yang tersedia.</p>
+                                    <p class="mb-0 small">Belum ada produk yang tersedia.</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -109,15 +109,15 @@
             </div>
         </div>
 
-        @if ($permissions->hasPages())
+        @if ($products->hasPages())
             <div class="card-footer bg-white border-0 py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="small text-muted">
-                        Menampilkan {{ $permissions->firstItem() }} sampai {{ $permissions->lastItem() }} dari
-                        {{ $permissions->total() }} data
+                        Menampilkan {{ $products->firstItem() }} sampai {{ $products->lastItem() }} dari
+                        {{ $products->total() }} data
                     </span>
                     <div>
-                        {{ $permissions->links() }}
+                        {{ $products->links() }}
                     </div>
                 </div>
             </div>
@@ -133,8 +133,8 @@
                         style="width: 56px; height: 56px; background-color: #fef2f2 !important;">
                         <i class="fas fa-exclamation-triangle fa-lg"></i>
                     </div>
-                    <h5 class="font-weight-bold text-dark mb-1">Hapus Permission?</h5>
-                    <p class="text-muted small mb-4" id="deleteModalText">Apakah Anda yakin ingin menghapus data ini?
+                    <h5 class="font-weight-bold text-dark mb-1">Hapus Produk?</h5>
+                    <p class="text-muted small mb-4" id="deleteModalText">Apakah Anda yakin ingin menghapus produk ini?
                         Tindakan ini tidak dapat dibatalkan.</p>
 
                     <div class="d-flex justify-content-center">

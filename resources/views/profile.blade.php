@@ -43,11 +43,12 @@
 
                             {{-- Kolom Kiri: Form Input --}}
                             <div class="col-md-7 border-right-md pr-md-4">
-                                <h5 class="font-weight-bold text-dark mb-4">Edit your profile</h5>
+                                <h5 class="font-weight-bold text-dark mb-4">Edit profil Anda</h5>
 
-                                {{-- Name --}}
+                                {{-- Nama --}}
                                 <div class="form-group mb-3">
-                                    <label for="name" class="font-weight-normal text-secondary small">Full name</label>
+                                    <label for="name" class="font-weight-normal text-secondary small">Nama
+                                        lengkap</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-white border-right-0"><i
@@ -81,10 +82,10 @@
                                     </div>
                                 </div>
 
-                                {{-- Password --}}
+                                {{-- Kata Sandi Baru --}}
                                 <div class="form-group mb-3">
-                                    <label for="password" class="font-weight-normal text-secondary small">New Password
-                                        <small class="text-muted">(Leave blank to keep current)</small></label>
+                                    <label for="password" class="font-weight-normal text-secondary small">Kata Sandi Baru
+                                        <small class="text-muted">(Kosongkan jika tidak ingin mengubah)</small></label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-white border-right-0"><i
@@ -92,7 +93,7 @@
                                         </div>
                                         <input type="password" name="password"
                                             class="form-control border-left-0 @error('password') is-invalid @enderror"
-                                            id="password" placeholder="New password">
+                                            id="password" placeholder="Kata sandi baru">
                                         @error('password')
                                             <span class="invalid-feedback"
                                                 role="alert"><strong>{{ $message }}</strong></span>
@@ -100,10 +101,10 @@
                                     </div>
                                 </div>
 
-                                {{-- Password Confirmation --}}
+                                {{-- Konfirmasi Kata Sandi Baru --}}
                                 <div class="form-group mb-4">
                                     <label for="password_confirmation"
-                                        class="font-weight-normal text-secondary small">Confirm New Password</label>
+                                        class="font-weight-normal text-secondary small">Konfirmasi Kata Sandi Baru</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text bg-white border-right-0"><i
@@ -111,12 +112,12 @@
                                         </div>
                                         <input type="password" name="password_confirmation"
                                             class="form-control border-left-0" id="password_confirmation"
-                                            placeholder="Confirm new password">
+                                            placeholder="Konfirmasi kata sandi baru">
                                     </div>
                                 </div>
                             </div>
 
-                            {{-- Kolom Kanan: Preview Profil (Placeholder Gambar Anjing) --}}
+                            {{-- Kolom Kanan: Preview Profil --}}
                             <div class="col-md-5 text-center mt-4 mt-md-0 pl-md-4">
                                 <div class="position-relative d-inline-block mb-3">
                                     <img src="{{ asset('images/profile.png') }}" alt="Profile Preview"
@@ -135,16 +136,16 @@
 
                         </div>
 
-                        {{-- Footer Buttons --}}
+                        {{-- Tombol Aksi / Footer --}}
                         <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
                             <div>
                                 <a href="{{ url('/') }}"
                                     class="btn btn-light border mr-2 px-4 rounded-lg font-weight-semibold">
-                                    Cancel
+                                    Batal
                                 </a>
                                 <button type="submit" class="btn btn-dark px-4 rounded-lg font-weight-semibold"
                                     style="background-color: #0f172a; border: none;">
-                                    Save changes
+                                    Simpan perubahan
                                 </button>
                             </div>
                         </div>

@@ -1,21 +1,21 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit User')
+@section('title', 'Add Product')
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
             <div class="d-flex align-items-center">
                 <h1 class="font-weight-bold text-dark mb-0" style="font-size: 2rem; line-height: 1;">
-                    Edit User
+                    Tambah Produk
                 </h1>
             </div>
-            <div class="text-muted small mt-1">
+            <div class="text-muted small mt-2">
                 <a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <a href="{{ route('users.index') }}" class="text-muted text-decoration-none">User</a>
+                <a href="{{ route('products.index') }}" class="text-muted text-decoration-none">Produk</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <span>Edit User</span>
+                <span>Tambah Produk</span>
             </div>
         </div>
     </div>
@@ -30,105 +30,80 @@
                     <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
                         <div class="mr-3 d-flex align-items-center justify-content-center bg-light rounded-circle"
                             style="width: 40px; height: 40px;">
-                            <i class="fas fa-user-edit text-secondary"></i>
+                            <i class="fas fa-box text-secondary"></i>
                         </div>
                         <div>
-                            <h5 class="m-0 font-weight-bold text-dark">Edit User</h5>
-                            <small class="text-muted">Perbarui detail user dan role yang diberikan</small>
+                            <h5 class="m-0 font-weight-bold text-dark">Detail Produk</h5>
+                            <small class="text-muted">Masukkan informasi barang baru ke dalam sistem</small>
                         </div>
                     </div>
 
-                    <form action="{{ route('users.update', $user->id) }}" method="POST">
+                    <form action="{{ route('products.store') }}" method="POST">
                         @csrf
-                        @method('PUT')
 
-                        {{-- Nama --}}
+                        {{-- Nama Barang --}}
                         <div class="form-group mb-3">
-                            <label for="name" class="font-weight-normal text-secondary">Nama Lengkap <span
+                            <label for="name" class="font-weight-normal text-secondary">Nama Barang <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i
-                                            class="fas fa-user text-muted"></i></span>
+                                            class="fas fa-tag text-muted"></i></span>
                                 </div>
                                 <input type="text" name="name"
                                     class="form-control border-left-0 @error('name') is-invalid @enderror" id="name"
-                                    value="{{ old('name', $user->name) }}" required autofocus>
+                                    placeholder="Contoh: Semen Gresik 50kg" value="{{ old('name') }}" required autofocus>
                                 @error('name')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Email --}}
+                        {{-- Jumlah Barang (Amount) --}}
                         <div class="form-group mb-3">
-                            <label for="email" class="font-weight-normal text-secondary">Alamat Email <span
+                            <label for="amount" class="font-weight-normal text-secondary">Jumlah Barang (Stok) <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white border-right-0"><i
-                                            class="fas fa-envelope text-muted"></i></span>
+                                            class="fas fa-cubes text-muted"></i></span>
                                 </div>
-                                <input type="email" name="email"
-                                    class="form-control border-left-0 @error('email') is-invalid @enderror" id="email"
-                                    value="{{ old('email', $user->email) }}" required>
-                                @error('email')
+                                <input type="number" name="amount"
+                                    class="form-control border-left-0 @error('amount') is-invalid @enderror" id="amount"
+                                    placeholder="0" value="{{ old('amount') }}" min="0" required>
+                                @error('amount')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Kata Sandi (Opsional) --}}
-                        <div class="form-group mb-3">
-                            <label for="password" class="font-weight-normal text-secondary">Kata Sandi <small
-                                    class="text-muted">(Kosongkan jika tidak ingin mengubah)</small></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-white border-right-0"><i
-                                            class="fas fa-lock text-muted"></i></span>
-                                </div>
-                                <input type="password" name="password"
-                                    class="form-control border-left-0 @error('password') is-invalid @enderror"
-                                    id="password" placeholder="Kata sandi baru">
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        {{-- Pilih Role --}}
+                        {{-- Harga Satuan (Unit Price) --}}
                         <div class="form-group mb-4">
-                            <label for="role" class="font-weight-normal text-secondary">Pilih Role <span
+                            <label for="unit_price" class="font-weight-normal text-secondary">Harga Satuan (Rp) <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-white border-right-0"><i
-                                            class="fas fa-user-shield text-muted"></i></span>
+                                    <span
+                                        class="input-group-text bg-white border-right-0 font-weight-semibold text-muted">Rp</span>
                                 </div>
-                                <select name="role" id="role"
-                                    class="form-control border-left-0 @error('role') is-invalid @enderror" required>
-                                    <option value="" disabled>-- Pilih Role --</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}"
-                                            {{ old('role', $userRole) == $role->name ? 'selected' : '' }}>
-                                            {{ $role->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('role')
+                                <input type="number" step="0.01" name="unit_price"
+                                    class="form-control border-left-0 @error('unit_price') is-invalid @enderror"
+                                    id="unit_price" placeholder="346000" value="{{ old('unit_price') }}" min="0"
+                                    required>
+                                @error('unit_price')
                                     <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Tombol Aksi --}}
+                        {{-- Action Buttons --}}
                         <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                            <a href="{{ route('users.index') }}" class="btn btn-light border mr-2 px-4">
+                            <a href="{{ route('products.index') }}" class="btn btn-light border mr-2 px-4">
                                 Batal
                             </a>
                             <button type="submit" class="btn btn-dark px-4"
                                 style="background-color: #343a40; border-color: #343a40;">
-                                <i class="fas fa-sync-alt mr-2"></i> Perbarui
+                                <i class="fas fa-save mr-2"></i> Simpan
                             </button>
                         </div>
                     </form>

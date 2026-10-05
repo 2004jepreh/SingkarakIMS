@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 4',
+    'title' => 'SingkarakIMS',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -780,6 +780,12 @@ return [
             'text' => 'Home',
             'url'  => '/',
             'icon' => 'fas fa-fw fa-tachometer-alt',
+        ],
+        [
+            'text' => 'Produk',
+            'url'  => 'products',
+            'icon' => 'fas fa-fw fa-boxes',
+            'can' => 'manage-products',
         ],
         ['header' => 'SETTINGS'],
         [

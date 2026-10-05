@@ -16,7 +16,7 @@
 
         {{-- Email field --}}
         <div class="form-group mb-3">
-            <label for="email" class="font-weight-normal text-secondary small">Email Address</label>
+            <label for="email" class="font-weight-normal text-secondary small">Email</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text bg-white border-right-0">
@@ -59,7 +59,7 @@
         {{-- Submit Button --}}
         <button type="submit" class="btn btn-dark btn-block font-weight-semibold shadow-sm py-2 rounded-lg"
             style="background-color: #0f172a; border: none; font-size: 0.95rem;">
-            <i class="fas fa-sign-in-alt mr-1" style="font-size: 0.85rem;"></i> Sign In
+            <i class="fas fa-sign-in-alt mr-1" style="font-size: 0.85rem;"></i> Masuk
         </button>
     </form>
 @stop

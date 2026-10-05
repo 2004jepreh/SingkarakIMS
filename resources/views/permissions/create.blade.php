@@ -1,21 +1,21 @@
 @extends('adminlte::page')
 
-@section('title', 'Add Permission')
+@section('title', 'Tambah Permission')
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
             <div class="d-flex align-items-center">
                 <h1 class="font-weight-bold text-dark mb-0" style="font-size: 2rem; line-height: 1;">
-                    Add Permission
+                    Tambah Permission
                 </h1>
             </div>
-            <div class="text-muted small mt-1">
+            <div class="text-muted small mt-2">
                 <a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <a href="{{ route('permissions.index') }}" class="text-muted text-decoration-none">Permissions</a>
+                <a href="{{ route('permissions.index') }}" class="text-muted text-decoration-none">Permission</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <span>Create</span>
+                <span>Tambah Permission</span>
             </div>
         </div>
     </div>
@@ -35,8 +35,8 @@
                             <i class="fas fa-key text-secondary"></i>
                         </div>
                         <div>
-                            <h5 class="m-0 font-weight-bold text-dark">Permission Details</h5>
-                            <small class="text-muted">Enter new permission name</small>
+                            <h5 class="m-0 font-weight-bold text-dark">Detail Permission</h5>
+                            <small class="text-muted">Masukkan nama permission baru</small>
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                         @csrf
 
                         <div class="form-group mb-4">
-                            <label for="name" class="font-weight-normal text-secondary">Permission Name <span
+                            <label for="name" class="font-weight-normal text-secondary">Nama Permission <span
                                     class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -53,7 +53,7 @@
                                 </div>
                                 <input type="text" name="name"
                                     class="form-control border-left-0 @error('name') is-invalid @enderror" id="name"
-                                    placeholder="Example: create-users" value="{{ old('name') }}" required autofocus>
+                                    placeholder="Contoh: create-users" value="{{ old('name') }}" required autofocus>
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -61,18 +61,18 @@
                                 @enderror
                             </div>
                             <small class="form-text text-muted mt-2">
-                                Use lowercase and hyphens format (e.g., <code>edit-item</code>).
+                                Gunakan format huruf kecil dan tanda hubung (contoh: <code>edit-item</code>).
                             </small>
                         </div>
 
                         {{-- Action Buttons --}}
                         <div class="d-flex justify-content-end mt-4 pt-3 border-top">
                             <a href="{{ route('permissions.index') }}" class="btn btn-light border mr-2 px-4">
-                                Cancel
+                                Batal
                             </a>
                             <button type="submit" class="btn btn-dark px-4"
                                 style="background-color: #343a40; border-color: #343a40;">
-                                <i class="fas fa-save mr-2"></i> Save
+                                <i class="fas fa-save mr-2"></i> Simpan
                             </button>
                         </div>
                     </form>
