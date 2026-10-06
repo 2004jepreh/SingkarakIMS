@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Add User')
+@section('title', 'Tambah User')
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center mb-2">

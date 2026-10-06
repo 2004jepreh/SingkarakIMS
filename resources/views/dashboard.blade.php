@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard Inventory')
+@section('title', 'Home')
 
 @section('content_header')
     {{-- Content Header dikosongkan agar Hero Banner menyatu rapi di bagian paling atas --}}
