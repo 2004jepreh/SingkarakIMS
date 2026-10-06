@@ -34,7 +34,7 @@
                 <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
                     <div class="rounded-circle overflow-hidden shadow-lg border"
                         style="width: 130px; height: 130px; border-color: rgba(255, 255, 255, 0.2) !important;">
-                        <img src="{{ asset('images/profile.png') }}" alt="Profile SingkarakIMS" class="w-100 h-100"
+                        <img src="{{ asset('images/supine.jpeg') }}" alt="Profile SingkarakIMS" class="w-100 h-100"
                             style="object-fit: cover;">
                     </div>
                 </div>

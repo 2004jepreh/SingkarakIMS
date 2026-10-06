@@ -787,6 +787,12 @@ return [
             'icon' => 'fas fa-fw fa-boxes',
             'can' => 'manage-products',
         ],
+        [
+        'text' => 'Pembelian',
+        'url'  => 'purchases',
+        'icon' => 'fas fa-fw fa-shopping-cart',
+        'can' => 'manage-purchases',
+        ],
         ['header' => 'SETTINGS'],
         [
             'text' => 'User',

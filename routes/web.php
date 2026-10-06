@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -21,8 +22,16 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    // Product Page
     Route::middleware(['can:manage-products'])->group(function () {
         Route::resource('products', ProductController::class);
+    });
+
+    Route::get('products/{product}/log', [ProductController::class, 'log'])->name('products.log');
+
+    // Purchases Page
+    Route::middleware(['can:manage-purchases'])->group(function () {
+        Route::resource('purchases', PurchaseController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     });
 
     // Super Admin Config

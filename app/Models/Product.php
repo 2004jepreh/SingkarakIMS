@@ -17,6 +17,19 @@ class Product extends Model
     ];
 
     /**
+     * Relasi ke model PriceLog (Satu produk memiliki banyak log harga)
+     */
+    public function priceLogs()
+    {
+        return $this->hasMany(PriceLog::class)->latest();
+    }
+
+    public function stockLogs()
+    {
+        return $this->hasMany(StockLog::class);
+    }
+
+    /**
      * Accessor untuk memformat harga satuan ke Rupiah
      */
     protected function formattedUnitPrice(): Attribute
