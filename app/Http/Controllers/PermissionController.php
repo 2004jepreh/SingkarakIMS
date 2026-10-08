@@ -27,7 +27,7 @@ class PermissionController extends Controller
         Permission::create(['name' => $request->name]);
 
         return redirect()->route('permissions.index')
-            ->with('success', 'Permission created.');
+            ->with('success', 'Permission berhasil ditambahkan.');
     }
 
     public function edit(Permission $permission)
@@ -44,7 +44,7 @@ class PermissionController extends Controller
         $permission->update(['name' => $request->name]);
 
         return redirect()->route('permissions.index')
-            ->with('success', 'Permission updated.');
+            ->with('success', 'Permission berhasil diperbarui.');
     }
 
     public function destroy(Permission $permission)
@@ -52,6 +52,6 @@ class PermissionController extends Controller
         $permission->delete();
 
         return redirect()->route('permissions.index')
-            ->with('success', 'Permission deleted.');
+            ->with('success', 'Permission berhasil dihapus.');
     }
 }

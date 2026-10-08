@@ -1,28 +1,28 @@
 @extends('adminlte::page')
 
-@section('title', 'Tambah Pembelian')
+@section('title', 'Tambah Penjualan')
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
             <div class="d-flex align-items-center">
                 <h1 class="font-weight-bold text-dark mb-0" style="font-size: 2rem; line-height: 1;">
-                    Tambah Pembelian
+                    Tambah Penjualan
                 </h1>
             </div>
             <div class="text-muted small mt-2">
                 <a href="{{ url('/') }}" class="text-muted text-decoration-none">Home</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <a href="{{ route('purchases.index') }}" class="text-muted text-decoration-none">Pembelian</a>
+                <a href="{{ route('sales.index') }}" class="text-muted text-decoration-none">Penjualan</a>
                 <i class="fas fa-chevron-right mx-1" style="font-size: 0.6rem;"></i>
-                <span>Tambah Pembelian</span>
+                <span>Tambah Penjualan</span>
             </div>
         </div>
     </div>
 @stop
 
 @section('content')
-    <form action="{{ route('purchases.store') }}" method="POST" id="purchase-form">
+    <form action="{{ route('sales.store') }}" method="POST" id="sale-form">
         @csrf
 
         {{-- Header Informasi Faktur --}}
@@ -34,8 +34,8 @@
                         <i class="fas fa-file-invoice text-secondary"></i>
                     </div>
                     <div>
-                        <h5 class="m-0 font-weight-bold text-dark">Informasi Faktur Pembelian</h5>
-                        <small class="text-muted">Masukkan detail header faktur dari supplier</small>
+                        <h5 class="m-0 font-weight-bold text-dark">Informasi Faktur Penjualan</h5>
+                        <small class="text-muted">Masukkan detail header faktur transaksi penjualan</small>
                     </div>
                 </div>
 
@@ -47,23 +47,23 @@
                             value="{{ $invoiceNumber }}" readonly style="border-radius: 8px;">
                     </div>
 
-                    {{-- Tanggal Pembelian --}}
+                    {{-- Tanggal Penjualan --}}
                     <div class="col-md-4 form-group mb-3 mb-md-0">
-                        <label for="date" class="font-weight-normal text-secondary small">Tanggal Pembelian <span
+                        <label for="date" class="font-weight-normal text-secondary small">Tanggal Penjualan <span
                                 class="text-danger">*</span></label>
                         <input type="date" name="date" class="form-control" id="date"
                             value="{{ old('date', $todayDate) }}" required style="border-radius: 8px;">
                     </div>
 
-                    {{-- Nama Supplier --}}
+                    {{-- Nama Pembeli --}}
                     <div class="col-md-4 form-group mb-0">
-                        <label for="supplier_name" class="font-weight-normal text-secondary small">Nama Supplier <span
+                        <label for="customer_name" class="font-weight-normal text-secondary small">Nama Pembeli <span
                                 class="text-danger">*</span></label>
-                        <input type="text" name="supplier_name"
-                            class="form-control @error('supplier_name') is-invalid @enderror" id="supplier_name"
-                            placeholder="Contoh: Toko Jaya Medan" value="{{ old('supplier_name') }}" required
+                        <input type="text" name="customer_name"
+                            class="form-control @error('customer_name') is-invalid @enderror" id="customer_name"
+                            placeholder="Contoh: Toko Jaya Medan" value="{{ old('customer_name') }}" required
                             style="border-radius: 8px;" autofocus>
-                        @error('supplier_name')
+                        @error('customer_name')
                             <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
@@ -81,8 +81,8 @@
                             <i class="fas fa-boxes text-secondary"></i>
                         </div>
                         <div>
-                            <h5 class="m-0 font-weight-bold text-dark">Item</h5>
-                            <small class="text-muted">Pilih produk lama atau ketikkan nama baru</small>
+                            <h5 class="m-0 font-weight-bold text-dark">Item Barang</h5>
+                            <small class="text-muted">Pilih produk yang akan dijual</small>
                         </div>
                     </div>
                     <button type="button" class="btn btn-outline-dark btn-sm px-3 rounded-lg font-weight-medium"
@@ -96,7 +96,8 @@
                         <thead>
                             <tr class="text-secondary small border-bottom">
                                 <th style="min-width: 250px;">NAMA BARANG</th>
-                                <th style="width: 130px;">JUMLAH</th>
+                                <th style="width: 130px;">STOK TERSEDIA</th>
+                                <th style="width: 130px;">BANYAKNYA (pcs)</th>
                                 <th style="width: 180px;">HARGA SATUAN (Rp)</th>
                                 <th style="width: 180px;">SUBTOTAL (Rp)</th>
                                 <th style="width: 50px;"></th>
@@ -106,9 +107,20 @@
                             {{-- Row Item Pertama --}}
                             <tr class="item-row">
                                 <td class="py-2 px-1">
-                                    <input type="text" name="items[0][product_name]" class="form-control product-input"
-                                        list="products-list" placeholder="Ketik/pilih nama barang..." required
+                                    <select name="items[0][product_id]" class="form-control product-select" required
                                         style="border-radius: 6px;">
+                                        <option value="">-- Pilih Barang --</option>
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}" data-stock="{{ $product->amount }}"
+                                                data-price="{{ $product->unit_price }}">
+                                                {{ $product->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td class="py-2 px-1 align-middle">
+                                    <input type="text" class="form-control stock-display text-center bg-light"
+                                        value="-" readonly style="border-radius: 6px;">
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="number" name="items[0][amount]"
@@ -117,8 +129,8 @@
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="number" step="0.01" name="items[0][unit_price]"
-                                        class="form-control price-input text-right" placeholder="0" min="0" required
-                                        style="border-radius: 6px;">
+                                        class="form-control price-input text-right bg-light" placeholder="0"
+                                        min="0" readonly required style="border-radius: 6px;">
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="text"
@@ -135,13 +147,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                {{-- Datalist produk lama untuk auto-complete --}}
-                <datalist id="products-list">
-                    @foreach ($products as $product)
-                        <option value="{{ $product->name }}"></option>
-                    @endforeach
-                </datalist>
 
                 {{-- Ringkasan Total & Diskon --}}
                 <div class="row justify-content-end mt-4 pt-3 border-top">
@@ -179,13 +184,13 @@
 
                 {{-- Footer Tombol --}}
                 <div class="d-flex justify-content-end align-items-center mt-3 pt-3 border-top">
-                    <a href="{{ route('purchases.index') }}"
+                    <a href="{{ route('sales.index') }}"
                         class="btn btn-light border mr-2 px-4 rounded-lg font-weight-semibold">
                         Batal
                     </a>
                     <button type="submit" class="btn btn-dark px-4 rounded-lg font-weight-semibold"
                         style="background-color: #0f172a; border: none;">
-                        <i class="fas fa-save mr-2"></i> Simpan Transaksi
+                        <i class="fas fa-save mr-2"></i> Simpan Penjualan
                     </button>
                 </div>
             </div>
@@ -201,6 +206,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let itemIndex = 1;
+            const productsData = @json($products);
 
             const container = document.getElementById('items-container');
             const btnAdd = document.getElementById('btn-add-item');
@@ -211,7 +217,20 @@
                 let grandSubtotal = 0;
 
                 document.querySelectorAll('.item-row').forEach(row => {
-                    const amount = parseFloat(row.querySelector('.amount-input').value) || 0;
+                    const amountInput = row.querySelector('.amount-input');
+                    const selectProduct = row.querySelector('.product-select');
+                    const selectedOption = selectProduct.options[selectProduct.selectedIndex];
+                    const stock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
+
+                    let amount = parseFloat(amountInput.value) || 0;
+
+                    // Batasi jika melebihi stok yang ada
+                    if (amount > stock && stock > 0) {
+                        alert(`Stok tidak mencukupi! Stok yang tersedia hanya ${stock} pcs.`);
+                        amountInput.value = stock;
+                        amount = stock;
+                    }
+
                     const price = parseFloat(row.querySelector('.price-input').value) || 0;
                     const subtotal = amount * price;
 
@@ -232,6 +251,24 @@
                     .format(finalTotal);
             }
 
+            // Update info stok dan harga saat barang dipilih
+            function updateRowProductData(row) {
+                const selectProduct = row.querySelector('.product-select');
+                const selectedOption = selectProduct.options[selectProduct.selectedIndex];
+                const stock = selectedOption.getAttribute('data-stock') || '-';
+                const price = selectedOption.getAttribute('data-price') || 0;
+
+                row.querySelector('.stock-display').value = stock !== '-' ? `${stock} pcs` : '-';
+                row.querySelector('.price-input').value = price;
+
+                const amountInput = row.querySelector('.amount-input');
+                if (stock !== '-') {
+                    amountInput.max = stock;
+                }
+
+                calculateTotals();
+            }
+
             // Tampilkan/Sembunyikan Tombol Hapus
             function toggleRemoveButtons() {
                 const rows = document.querySelectorAll('.item-row');
@@ -241,29 +278,47 @@
                 });
             }
 
+            // Event listener saat memilih produk di baris
+            container.addEventListener('change', function(e) {
+                if (e.target.classList.contains('product-select')) {
+                    updateRowProductData(e.target.closest('.item-row'));
+                }
+            });
+
             // Tambah Baris Baru
             btnAdd.addEventListener('click', function() {
+                let optionsHtml = '<option value="">-- Pilih Barang --</option>';
+                productsData.forEach(p => {
+                    optionsHtml +=
+                        `<option value="${p.id}" data-stock="${p.amount}" data-price="${p.unit_price}">${p.name}</option>`;
+                });
+
                 const newRow = document.createElement('tr');
                 newRow.className = 'item-row';
                 newRow.innerHTML = `
-                <td class="py-2 px-1">
-                    <input type="text" name="items[${itemIndex}][product_name]" class="form-control product-input" list="products-list" placeholder="Ketik/pilih nama barang..." required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="number" name="items[${itemIndex}][amount]" class="form-control amount-input text-center" value="1" min="1" required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" class="form-control price-input text-right" placeholder="0" min="0" required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="text" class="form-control subtotal-display text-right font-weight-semibold bg-light" value="Rp. 0" readonly style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1 align-middle text-center">
-                    <button type="button" class="btn btn-link text-danger p-0 btn-remove-item">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
+                    <td class="py-2 px-1">
+                        <select name="items[${itemIndex}][product_id]" class="form-control product-select" required style="border-radius: 6px;">
+                            ${optionsHtml}
+                        </select>
+                    </td>
+                    <td class="py-2 px-1 align-middle">
+                        <input type="text" class="form-control stock-display text-center bg-light" value="-" readonly style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="number" name="items[${itemIndex}][amount]" class="form-control amount-input text-center" value="1" min="1" required style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" class="form-control price-input text-right bg-light" placeholder="0" min="0" readonly required style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="text" class="form-control subtotal-display text-right font-weight-semibold bg-light" value="Rp. 0" readonly style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1 align-middle text-center">
+                        <button type="button" class="btn btn-link text-danger p-0 btn-remove-item">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
 
                 container.appendChild(newRow);
                 itemIndex++;
@@ -279,7 +334,7 @@
                 }
             });
 
-            // Event Listener untuk Rekalkulasi Real-time
+            // Event Listener Rekalkulasi
             container.addEventListener('input', calculateTotals);
             discountInput.addEventListener('input', calculateTotals);
         });

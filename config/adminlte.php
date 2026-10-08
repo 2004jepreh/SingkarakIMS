@@ -779,7 +779,7 @@ return [
         [
             'text' => 'Home',
             'url'  => '/',
-            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'icon' => 'fas fa-fw fa-home',
         ],
         [
             'text' => 'Produk',
@@ -788,10 +788,22 @@ return [
             'can' => 'manage-products',
         ],
         [
-        'text' => 'Pembelian',
-        'url'  => 'purchases',
-        'icon' => 'fas fa-fw fa-shopping-cart',
-        'can' => 'manage-purchases',
+            'text' => 'Pembelian',
+            'url'  => 'purchases',
+            'icon' => 'fas fa-fw fa-shopping-bag',
+            'can' => 'manage-purchases',
+        ],
+        [
+            'text' => 'Penjualan',
+            'url'  => 'sales',
+            'icon' => 'fas fa-fw fa-shopping-cart',
+            'can' => 'manage-sales',
+        ],
+        [
+            'text' => 'Daftar Gaji',
+            'url'  => 'employees',
+            'icon' => 'fas fa-fw fa-hand-holding-usd',
+            'can' => 'manage-employees',
         ],
         ['header' => 'SETTINGS'],
         [

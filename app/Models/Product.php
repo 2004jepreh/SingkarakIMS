@@ -29,6 +29,11 @@ class Product extends Model
         return $this->hasMany(StockLog::class);
     }
 
+    public function saleDetails()
+    {
+        return $this->hasMany(SaleDetail::class);
+    }
+
     /**
      * Accessor untuk memformat harga satuan ke Rupiah
      */
