@@ -38,12 +38,15 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'customer_name'    => 'required|string|max:255',
-            'discount_percent' => 'nullable|numeric|min:0|max:100',
-            'items'            => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.amount'   => 'required|integer|min:1',
-            'items.*.unit_price' => 'required|numeric|min:0',
+            'invoice_number'         => 'required|string|unique:sales,invoice_number',
+            'date'                   => 'required|date',
+            'customer_name'          => 'required|string|max:255',
+            'discount_percent'       => 'nullable|numeric|min:0|max:100',
+            'items'                  => 'required|array|min:1',
+            'items.*.product_id'     => 'required|exists:products,id',
+            'items.*.amount'         => 'required|integer|min:1',
+            'items.*.unit_price'     => 'required|numeric|min:0',
+            'items.*.discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Validasi Awal: Cek Ketersediaan Stok Sebelum Eksekusi Transaksi
@@ -78,28 +81,41 @@ class SaleController extends Controller
                 // Catat Log Stok Penjualan Otomatis dengan Nama Pembeli
                 StockLog::record($product->id, $oldStock, $newStock, 'penjualan', $request->customer_name);
 
-                $itemSubtotal = $item['amount'] * $item['unit_price'];
+                // Perhitungan Diskon Per Produk (Item Level)
+                $itemAmount          = $item['amount'];
+                $itemUnitPrice       = $item['unit_price'];
+                $itemGrossTotal      = $itemAmount * $itemUnitPrice;
+                $itemDiscountPercent = $item['discount_percent'] ?? 0;
+                $itemDiscountAmount  = ($itemGrossTotal * $itemDiscountPercent) / 100;
+
+                // Subtotal per produk adalah total setelah dipotong diskon per produk
+                $itemSubtotal = $itemGrossTotal - $itemDiscountAmount;
+
+                // Subtotal Faktur adalah penjumlahan dari seluruh subtotal bersih item
                 $subtotalFaktur += $itemSubtotal;
 
                 $saleDetails[] = [
-                    'product_id' => $product->id,
-                    'amount'     => $item['amount'],
-                    'unit_price' => $item['unit_price'],
-                    'subtotal'   => $itemSubtotal,
+                    'product_id'       => $product->id,
+                    'amount'           => $itemAmount,
+                    'unit_price'       => $itemUnitPrice,
+                    'discount_percent' => $itemDiscountPercent,
+                    'discount_amount'  => $itemDiscountAmount,
+                    'subtotal'         => $itemSubtotal,
                 ];
             }
 
-            $discountPercent = $request->discount_percent ?? 0;
-            $discountAmount = ($subtotalFaktur * $discountPercent) / 100;
-            $totalAkhir = $subtotalFaktur - $discountAmount;
+            // Perhitungan Diskon Faktur Keseluruhan (Overall Level)
+            $invoiceDiscountPercent = $request->discount_percent ?? 0;
+            $invoiceDiscountAmount  = ($subtotalFaktur * $invoiceDiscountPercent) / 100;
+            $totalAkhir             = $subtotalFaktur - $invoiceDiscountAmount;
 
             $sale = Sale::create([
                 'invoice_number'   => $request->invoice_number,
                 'date'             => $request->date ?? date('Y-m-d'),
                 'customer_name'    => $request->customer_name,
                 'subtotal'         => $subtotalFaktur,
-                'discount_percent' => $discountPercent,
-                'discount_amount'  => $discountAmount,
+                'discount_percent' => $invoiceDiscountPercent,
+                'discount_amount'  => $invoiceDiscountAmount,
                 'total'            => $totalAkhir,
             ]);
 

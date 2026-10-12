@@ -36,12 +36,15 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_name'        => 'required|string|max:255',
-            'discount_percent'     => 'nullable|numeric|min:0|max:100',
-            'items'                => 'required|array|min:1',
-            'items.*.product_name' => 'required|string|max:255',
-            'items.*.amount'       => 'required|integer|min:1',
-            'items.*.unit_price'   => 'required|numeric|min:0',
+            'invoice_number'         => 'required|string|unique:purchases,invoice_number',
+            'date'                   => 'required|date',
+            'supplier_name'          => 'required|string|max:255',
+            'discount_percent'       => 'nullable|numeric|min:0|max:100',
+            'items'                  => 'required|array|min:1',
+            'items.*.product_name'   => 'required|string|max:255',
+            'items.*.amount'         => 'required|integer|min:1',
+            'items.*.unit_price'     => 'required|numeric|min:0',
+            'items.*.discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -69,20 +72,31 @@ class PurchaseController extends Controller
                     StockLog::record($product->id, 0, $item['amount'], 'pembelian', $request->supplier_name);
                 }
 
-                $itemSubtotal = $item['amount'] * $item['unit_price'];
+                // Perhitungan Diskon Per Produk (Item Level)
+                $itemAmount          = $item['amount'];
+                $itemUnitPrice       = $item['unit_price'];
+                $itemGrossTotal      = $itemAmount * $itemUnitPrice;
+                $itemDiscountPercent = $item['discount_percent'] ?? 0;
+                $itemDiscountAmount  = ($itemGrossTotal * $itemDiscountPercent) / 100;
+
+                // Subtotal per produk adalah total kotor dikurangi diskon per produk
+                $itemSubtotal = $itemGrossTotal - $itemDiscountAmount;
                 $subtotalFaktur += $itemSubtotal;
 
                 $purchaseDetails[] = [
-                    'product_id' => $product->id,
-                    'amount'     => $item['amount'],
-                    'unit_price' => $item['unit_price'],
-                    'subtotal'   => $itemSubtotal,
+                    'product_id'       => $product->id,
+                    'amount'           => $itemAmount,
+                    'unit_price'       => $itemUnitPrice,
+                    'discount_percent' => $itemDiscountPercent,
+                    'discount_amount'  => $itemDiscountAmount,
+                    'subtotal'         => $itemSubtotal,
                 ];
             }
 
+            // Perhitungan Diskon Faktur Keseluruhan (Overall Level)
             $discountPercent = $request->discount_percent ?? 0;
-            $discountAmount = ($subtotalFaktur * $discountPercent) / 100;
-            $totalAkhir = $subtotalFaktur - $discountAmount;
+            $discountAmount  = ($subtotalFaktur * $discountPercent) / 100;
+            $totalAkhir      = $subtotalFaktur - $discountAmount;
 
             $purchase = Purchase::create([
                 'invoice_number'   => $request->invoice_number,

@@ -95,11 +95,12 @@
                     <table class="table table-borderless align-middle" id="items-table">
                         <thead>
                             <tr class="text-secondary small border-bottom">
-                                <th style="min-width: 250px;">NAMA BARANG</th>
-                                <th style="width: 130px;">JUMLAH</th>
-                                <th style="width: 180px;">HARGA SATUAN (Rp)</th>
-                                <th style="width: 180px;">SUBTOTAL (Rp)</th>
-                                <th style="width: 50px;"></th>
+                                <th style="min-width: 230px;">NAMA BARANG</th>
+                                <th style="width: 110px;">JUMLAH</th>
+                                <th style="width: 160px;">HARGA SATUAN (Rp)</th>
+                                <th style="width: 130px;">DISKON (%)</th>
+                                <th style="width: 160px;">SUBTOTAL (Rp)</th>
+                                <th style="width: 40px;"></th>
                             </tr>
                         </thead>
                         <tbody id="items-container">
@@ -117,8 +118,19 @@
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="number" step="0.01" name="items[0][unit_price]"
-                                        class="form-control price-input text-right" placeholder="0" min="0" required
-                                        style="border-radius: 6px;">
+                                        class="form-control price-input text-right" placeholder="0" min="0"
+                                        required style="border-radius: 6px;">
+                                </td>
+                                <td class="py-2 px-1">
+                                    <div class="input-group w-100">
+                                        <input type="number" step="0.01" name="items[0][discount_percent]"
+                                            class="form-control item-discount-input text-center" value="0"
+                                            min="0" max="100" style="border-radius: 6px 0 0 6px;">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text bg-white"
+                                                style="border-radius: 0 6px 6px 0;">%</span>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td class="py-2 px-1">
                                     <input type="text"
@@ -143,7 +155,7 @@
                     @endforeach
                 </datalist>
 
-                {{-- Ringkasan Total & Diskon --}}
+                {{-- Ringkasan Total & Diskon Faktur --}}
                 <div class="row justify-content-end mt-4 pt-3 border-top">
                     <div class="col-md-5 col-lg-4">
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -152,9 +164,9 @@
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="text-secondary small font-weight-medium">Diskon (%):</span>
+                            <span class="text-secondary small font-weight-medium">Diskon Faktur (%):</span>
                             <div class="input-group input-group-sm" style="width: 120px;">
-                                <input type="number" name="discount_percent" id="discount_percent"
+                                <input type="number" step="0.01" name="discount_percent" id="discount_percent"
                                     class="form-control text-right" value="0" min="0" max="100"
                                     style="border-radius: 6px 0 0 6px;">
                                 <div class="input-group-append">
@@ -165,7 +177,7 @@
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <span class="text-secondary small font-weight-medium">Potongan Diskon:</span>
-                            <span class="text-muted small" id="display-discount-amount">- Rp. 0</span>
+                            <span class="text-muted small" id="display-discount-amount">Rp. 0</span>
                         </div>
 
                         <hr class="my-2">
@@ -206,33 +218,38 @@
             const btnAdd = document.getElementById('btn-add-item');
             const discountInput = document.getElementById('discount_percent');
 
-            // Fungsi Hitung Matematika Faktur
+            // Fungsi Hitung Matematika Faktur Pembelian (Diskon Item + Diskon Faktur)
             function calculateTotals() {
                 let grandSubtotal = 0;
 
                 document.querySelectorAll('.item-row').forEach(row => {
                     const amount = parseFloat(row.querySelector('.amount-input').value) || 0;
                     const price = parseFloat(row.querySelector('.price-input').value) || 0;
-                    const subtotal = amount * price;
+                    const itemDiscountPercent = parseFloat(row.querySelector('.item-discount-input')
+                        .value) || 0;
 
-                    grandSubtotal += subtotal;
+                    const grossTotal = amount * price;
+                    const itemDiscountAmount = (grossTotal * itemDiscountPercent) / 100;
+                    const itemSubtotal = grossTotal - itemDiscountAmount;
+
+                    grandSubtotal += itemSubtotal;
                     row.querySelector('.subtotal-display').value = 'Rp. ' + new Intl.NumberFormat('id-ID')
-                        .format(subtotal);
+                        .format(itemSubtotal);
                 });
 
-                const discountPercent = parseFloat(discountInput.value) || 0;
-                const discountAmount = (grandSubtotal * discountPercent) / 100;
-                const finalTotal = grandSubtotal - discountAmount;
+                const overallDiscountPercent = parseFloat(discountInput.value) || 0;
+                const overallDiscountAmount = (grandSubtotal * overallDiscountPercent) / 100;
+                const finalTotal = grandSubtotal - overallDiscountAmount;
 
                 document.getElementById('display-subtotal').textContent = 'Rp. ' + new Intl.NumberFormat('id-ID')
                     .format(grandSubtotal);
                 document.getElementById('display-discount-amount').textContent = '- Rp. ' + new Intl.NumberFormat(
-                    'id-ID').format(discountAmount);
+                    'id-ID').format(overallDiscountAmount);
                 document.getElementById('display-total').textContent = 'Rp. ' + new Intl.NumberFormat('id-ID')
                     .format(finalTotal);
             }
 
-            // Tampilkan/Sembunyikan Tombol Hapus
+            // Tampilkan/Sembunyikan Tombol Hapus Baris
             function toggleRemoveButtons() {
                 const rows = document.querySelectorAll('.item-row');
                 rows.forEach(row => {
@@ -246,24 +263,32 @@
                 const newRow = document.createElement('tr');
                 newRow.className = 'item-row';
                 newRow.innerHTML = `
-                <td class="py-2 px-1">
-                    <input type="text" name="items[${itemIndex}][product_name]" class="form-control product-input" list="products-list" placeholder="Ketik/pilih nama barang..." required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="number" name="items[${itemIndex}][amount]" class="form-control amount-input text-center" value="1" min="1" required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" class="form-control price-input text-right" placeholder="0" min="0" required style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1">
-                    <input type="text" class="form-control subtotal-display text-right font-weight-semibold bg-light" value="Rp. 0" readonly style="border-radius: 6px;">
-                </td>
-                <td class="py-2 px-1 align-middle text-center">
-                    <button type="button" class="btn btn-link text-danger p-0 btn-remove-item">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
+                    <td class="py-2 px-1">
+                        <input type="text" name="items[${itemIndex}][product_name]" class="form-control product-input" list="products-list" placeholder="Ketik/pilih nama barang..." required style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="number" name="items[${itemIndex}][amount]" class="form-control amount-input text-center" value="1" min="1" required style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" class="form-control price-input text-right" placeholder="0" min="0" required style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1">
+                        <div class="input-group w-100">
+                            <input type="number" step="0.01" name="items[${itemIndex}][discount_percent]" class="form-control item-discount-input text-center" value="0" min="0" max="100" style="border-radius: 6px 0 0 6px;">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-white" style="border-radius: 0 6px 6px 0;">%</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-2 px-1">
+                        <input type="text" class="form-control subtotal-display text-right font-weight-semibold bg-light" value="Rp. 0" readonly style="border-radius: 6px;">
+                    </td>
+                    <td class="py-2 px-1 align-middle text-center">
+                        <button type="button" class="btn btn-link text-danger p-0 btn-remove-item">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
 
                 container.appendChild(newRow);
                 itemIndex++;
@@ -279,7 +304,7 @@
                 }
             });
 
-            // Event Listener untuk Rekalkulasi Real-time
+            // Event Listener Rekalkulasi Realtime
             container.addEventListener('input', calculateTotals);
             discountInput.addEventListener('input', calculateTotals);
         });
